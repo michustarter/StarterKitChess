@@ -4,12 +4,11 @@ import com.capgemini.chess.algorithms.data.Coordinate;
 import com.capgemini.chess.algorithms.data.enums.Color;
 import com.capgemini.chess.algorithms.data.enums.Piece;
 import com.capgemini.chess.algorithms.data.generated.Board;
-import com.capgemini.chess.algorithms.implementation.exceptions.InvalidMoveException;
 
 public class Pawn implements PieceOnBoard {
 
 	@Override
-	public boolean isMoveToDestination(Coordinate from, Coordinate to, Board board) throws InvalidMoveException {
+	public boolean isMoveToDestination(Coordinate from, Coordinate to, Board board) {
 
 		int yFrom = from.getY();
 		int xFrom = from.getX();
@@ -19,7 +18,7 @@ public class Pawn implements PieceOnBoard {
 		int singleStep;
 		int doubleStep;
 		boolean isPossibility = false;
-		Piece pieceAtTo = board.getPieceAt(new Coordinate(xTo, yTo));
+		Piece fieldAtTo = board.getPieceAt(new Coordinate(xTo, yTo));
 		Color pawnColor = board.getPieceAt(from).getColor();
 
 		if (pawnColor == Color.WHITE) {
@@ -31,20 +30,20 @@ public class Pawn implements PieceOnBoard {
 			singleStep = -1;
 			doubleStep = -2;
 		}
-		if (yFrom == yStart && ((yFrom + singleStep) == yTo && pieceAtTo == null)) {
+		if (yFrom == yStart && ((yFrom + singleStep) == yTo && fieldAtTo == null)) {
 			isPossibility = true;
 			if ((xFrom - 1 == xTo) || (xFrom + 1 == xTo)) {
 				return isPossibility;
 			}
 			return isPossibility;
 
-		} else if (yFrom == yStart && ((yFrom + doubleStep) == yTo && pieceAtTo == null)) {
+		} else if (yFrom == yStart && ((yFrom + doubleStep) == yTo && fieldAtTo == null)) {
 			if (board.getPieceAt(new Coordinate(xFrom, yFrom + singleStep)) == null) {
 				isPossibility = true;
 				return isPossibility;
 			}
 			return isPossibility;
-		} else if (yFrom != yStart && (yFrom + singleStep) == yTo && pieceAtTo == null) {
+		} else if (yFrom != yStart && (yFrom + singleStep) == yTo && fieldAtTo == null) {
 			isPossibility = true;
 			return isPossibility;
 		}

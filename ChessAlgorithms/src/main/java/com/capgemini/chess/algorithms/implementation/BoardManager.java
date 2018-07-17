@@ -1,7 +1,9 @@
 package com.capgemini.chess.algorithms.implementation;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.capgemini.chess.algorithms.data.Coordinate;
 import com.capgemini.chess.algorithms.data.Move;
@@ -232,41 +234,85 @@ public class BoardManager {
 	}
 
 	private Move validateMove(Coordinate from, Coordinate to) throws InvalidMoveException, KingInCheckException {
-		// TODO please add implementation here
+
+		Move executedMove = null;
+		Color pieceColor = board.getPieceAt(from).getColor();
+		Piece movedPiece = board.getPieceAt(from);
+		PieceOnBoard chosenPiece;
 
 		Validation.basicValidation(from, to, board);
+		
+		if (calculateNextMoveColor() == pieceColor) {
+			chosenPiece = PieceFactory.returnPiece(movedPiece.getType());
+			if (chosenPiece.isMoveToDestination(from, to, board)) {
+				board.setPieceAt(movedPiece, to);
+				board.setPieceAt(null, from);
+			}
+			if (isKingInCheck(pieceColor)) {
+			}
+		}
 
-		PieceType movedPiece = this.board.getPieceAt(from).getType();
-		PieceFactory.returnPiece(movedPiece);
-
-		/*
-		 * calculate next movie color trzeba by uzyc - ze jaki teraz mam uzyc
-		 * kolor tak naprawde, a nie ze tylko z pola from kolor ma byæ inny niz
-		 * na polu to - ale moze to sprawdzac sobie w tej metodzie tutaj wewn¹trz validateMove a nie ze wewnatrz wewnatrz...
-		 * 
-		 * np pobieram nextColor TUTAJ i musi byæ== colorowi z pola FROM !!!!! i dalej juz bez problemu moj kod dziala w poszczegolnych figurach
-		 * FIXME i isMoveToDestination return true - to daæ w
-		 * pierwszym warunku if ³¹cznie z basic validation i tutaj daæ:
-		 * board.setPieceAt(movedPiece, to); board.setPieceAt(null, from); i
-		 * tutaj tez ustawiam rodzaj ruchu a InvalidMoveExc wyrzucê tutaj jeœli
-		 * isMoveToDest da mi false
-		 * 
-		 */
-
-		return null;
+		return executedMove;
 	}
 
 	private boolean isKingInCheck(Color kingColor) {
-
-		// TODO please add implementation here
-		return false;
+		int x = 0;
+		int y = 0;
+		boolean result = false;
+		PieceOnBoard checkedPiece;
+		Map<Coordinate, PieceOnBoard> opponentPieces = new HashMap<>();
+		while (y < Board.SIZE) {
+			while (x < Board.SIZE) {
+				if (board.getPieceAt(new Coordinate(x, y)) != null
+						&& board.getPieceAt(new Coordinate(x, y)).getColor() != kingColor) {
+					checkedPiece = PieceFactory.returnPiece(board.getPieceAt(new Coordinate(x, y)).getType());
+					opponentPieces.put(new Coordinate(x, y), checkedPiece);
+				}
+				x++;
+			}
+			x = 0;
+			y++;
+		}
+		for (Coordinate key : opponentPieces.keySet()) {
+			if (opponentPieces.get(key).isMoveToDestination(key, kingCoordinates(kingColor), board)) {
+				result = true;
+				return result;
+			}
+		}
+		return result;
 	}
 
 	private boolean isAnyMoveValid(Color nextMoveColor) {
-
 		// TODO please add implementation here
+		/*
+		 * z board pobraæ pola które s¹ puste i dodaæ je do jakiejœ listy sobie
+		 * np i iterowaæ po kazdym elemencie z listy czy do niego mozna dojsc
+		 * pionkami przeciwnika
+		 */
 
 		return false;
+	}
+
+	private Coordinate kingCoordinates(Color kingColor) {
+		int x = 0;
+		int y = 0;
+		Coordinate findCoordinate = new Coordinate(x, y);
+
+		while (y < Board.SIZE) {
+			while (x < Board.SIZE) {
+				if (board.getPieceAt(new Coordinate(x, y)).getType() == PieceType.KING
+						&& board.getPieceAt(new Coordinate(x, y)).getColor() == kingColor) {
+					findCoordinate = new Coordinate(x, y);
+					return findCoordinate;
+				}
+				x++;
+			}
+			x = 0;
+			y++;
+		}
+
+		return findCoordinate;
+
 	}
 
 	private Color calculateNextMoveColor() {

@@ -24,7 +24,7 @@ public class PieceFactory {
 			piece = new Rook();
 			break;
 		case PAWN:
-			piece = new Pawn(); // bez break zwroci mi zawsze Pawn!!!!!
+			piece = new Pawn();
 			break;
 		}
 		return piece;

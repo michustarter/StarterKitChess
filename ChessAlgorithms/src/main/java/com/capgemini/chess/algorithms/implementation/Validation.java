@@ -8,7 +8,6 @@ import com.capgemini.chess.algorithms.implementation.exceptions.FromFieldCoordin
 import com.capgemini.chess.algorithms.implementation.exceptions.InvalidMoveException;
 import com.capgemini.chess.algorithms.implementation.exceptions.NullFromFieldException;
 import com.capgemini.chess.algorithms.implementation.exceptions.ToFieldCoordinatesOutsideBoardException;
-import com.capgemini.chess.algorithms.implementation.exceptions.WrongPieceColorAtToFieldException;
 
 public class Validation {
 
@@ -18,7 +17,6 @@ public class Validation {
 		int xFrom = from.getX();
 		int yTo = to.getY();
 		int xTo = to.getX();
-		Piece pieceAtTo = board.getPieceAt(to);
 		Piece pieceAtFrom = board.getPieceAt(from);
 		boolean isRangeFromField = yFrom >= 0 && yFrom < Board.SIZE && xFrom >= 0 && xFrom < Board.SIZE;
 		boolean isRangeToField = yTo >= 0 && yTo < Board.SIZE && xTo >= 0 && xTo < Board.SIZE;
@@ -34,9 +32,6 @@ public class Validation {
 		}
 		if (from.equals(to)) {
 			throw new EqualFieldCoordinatesException();
-		}
-		if (pieceAtFrom.getColor() == pieceAtTo.getColor()) {
-			throw new WrongPieceColorAtToFieldException();
 		}
 	}
 }
