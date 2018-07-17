@@ -5,13 +5,8 @@ package com.capgemini.chess.algorithms.implementation.exceptions;
 
 public class ToFieldCoordinatesOutsideBoardException extends InvalidMoveException {
 
-	private static final long serialVersionUID = -3106688561649242422L;
+	private static final long serialVersionUID = -2697173672721540908L;
 
 	public ToFieldCoordinatesOutsideBoardException() {
-		super("Coordinates of field to are outside the board!");
-	}
-
-	public ToFieldCoordinatesOutsideBoardException(String message) {
-		super("Coordinates of field to are outside the board!" + message);
 	}
 }

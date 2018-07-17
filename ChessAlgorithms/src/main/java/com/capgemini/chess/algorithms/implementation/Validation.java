@@ -5,13 +5,14 @@ import com.capgemini.chess.algorithms.data.enums.Piece;
 import com.capgemini.chess.algorithms.data.generated.Board;
 import com.capgemini.chess.algorithms.implementation.exceptions.EqualFieldCoordinatesException;
 import com.capgemini.chess.algorithms.implementation.exceptions.FromFieldCoordinatesOutsideBoardException;
+import com.capgemini.chess.algorithms.implementation.exceptions.InvalidMoveException;
 import com.capgemini.chess.algorithms.implementation.exceptions.NullFromFieldException;
 import com.capgemini.chess.algorithms.implementation.exceptions.ToFieldCoordinatesOutsideBoardException;
 import com.capgemini.chess.algorithms.implementation.exceptions.WrongPieceColorAtToFieldException;
 
 public class Validation {
 
-	public boolean basicValidation(Coordinate from, Coordinate to, Board board) {
+	public static void basicValidation(Coordinate from, Coordinate to, Board board) throws InvalidMoveException {
 
 		int yFrom = from.getY();
 		int xFrom = from.getX();
@@ -19,39 +20,23 @@ public class Validation {
 		int xTo = to.getX();
 		Piece pieceAtTo = board.getPieceAt(to);
 		Piece pieceAtFrom = board.getPieceAt(from);
-		boolean possibleMove = false;
-		boolean rangeInFromField = yFrom >= 0 && yFrom < Board.SIZE && xFrom >= 0 && xFrom < Board.SIZE;
-		boolean rangeInToField = yTo >= 0 && yTo < Board.SIZE && xTo >= 0 && xTo < Board.SIZE;
+		boolean isRangeFromField = yFrom >= 0 && yFrom < Board.SIZE && xFrom >= 0 && xFrom < Board.SIZE;
+		boolean isRangeToField = yTo >= 0 && yTo < Board.SIZE && xTo >= 0 && xTo < Board.SIZE;
 
-		try {
-			if (!rangeInFromField) {
-				throw new FromFieldCoordinatesOutsideBoardException();
-			}
-			if (!rangeInToField) {
-				throw new ToFieldCoordinatesOutsideBoardException();
-			}
-			if (pieceAtFrom == null) {
-				throw new NullFromFieldException();
-			}
-			if (from.equals(to)) {
-				throw new EqualFieldCoordinatesException();
-			}
-			if (pieceAtFrom.getColor() == pieceAtTo.getColor()) {
-				throw new WrongPieceColorAtToFieldException();
-			}
-			possibleMove = true;
+		if (!isRangeFromField) {
+			throw new FromFieldCoordinatesOutsideBoardException();
 		}
-		catch (FromFieldCoordinatesOutsideBoardException e) {
-			e.printStackTrace();
-		} catch (ToFieldCoordinatesOutsideBoardException e) {
-			e.printStackTrace();
-		} catch (NullFromFieldException e) {
-			e.printStackTrace();
-		} catch (EqualFieldCoordinatesException e) {
-			e.printStackTrace();
-		} catch (WrongPieceColorAtToFieldException e) {
-			e.printStackTrace();
+		if (!isRangeToField) {
+			throw new ToFieldCoordinatesOutsideBoardException();
 		}
-		return possibleMove;
+		if (pieceAtFrom == null) {
+			throw new NullFromFieldException();
+		}
+		if (from.equals(to)) {
+			throw new EqualFieldCoordinatesException();
+		}
+		if (pieceAtFrom.getColor() == pieceAtTo.getColor()) {
+			throw new WrongPieceColorAtToFieldException();
+		}
 	}
 }

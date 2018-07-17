@@ -7,13 +7,10 @@ package com.capgemini.chess.algorithms.implementation.exceptions;
 
 public class NullFromFieldException extends InvalidMoveException {
 
-	private static final long serialVersionUID = -7901379657023895628L;
+	private static final long serialVersionUID = 673830064026336541L;
 
 	public NullFromFieldException() {
-		super("Square from is null!");
+
 	}
 
-	public NullFromFieldException(String message) {
-		super("ISquare from is null! " + message);
-	}
 }

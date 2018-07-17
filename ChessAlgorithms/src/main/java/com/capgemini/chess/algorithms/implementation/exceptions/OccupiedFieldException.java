@@ -5,13 +5,8 @@ package com.capgemini.chess.algorithms.implementation.exceptions;
 
 public class OccupiedFieldException extends InvalidMoveException {
 
-	private static final long serialVersionUID = 2006918001959196954L;
+	private static final long serialVersionUID = 709351584731396904L;
 
 	public OccupiedFieldException() {
-		super("The path to get to the To field contains an obstacle!");
-	}
-
-	public OccupiedFieldException(String message) {
-		super("The path to get to the TO field contains an obstacle" + message);
 	}
 }

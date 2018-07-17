@@ -48,8 +48,6 @@ public class BoardManager {
 		return this.board;
 	}
 
-	private PieceFactory factory;
-
 	/**
 	 * Performs move of the chess piece on the chess board from one field to
 	 * another.
@@ -235,23 +233,25 @@ public class BoardManager {
 
 	private Move validateMove(Coordinate from, Coordinate to) throws InvalidMoveException, KingInCheckException {
 		// TODO please add implementation here
-		Validation basic = new Validation();
 
-		if (basic.basicValidation(from, to, board)) {
+		Validation.basicValidation(from, to, board);
 
-			PieceType movedPiece = this.board.getPieceAt(from).getType();
+		PieceType movedPiece = this.board.getPieceAt(from).getType();
+		PieceFactory.returnPiece(movedPiece);
 
-			factory.returnPiece(movedPiece).isMoveToDestination(from, to, board);
-			/*
-			 * FIXME i isMoveToDestination return true - to daæ w pierwszym
-			 * warunku if ³¹cznie z basic validation i tutaj daæ:
-			 * board.setPieceAt(movedPiece, to); board.setPieceAt(null, from); i
-			 * tutaj tez ustawiam rodzaj ruchu a InvalidMoveExc wyrzucê tutaj
-			 * jeœli isMoveToDest da mi false
-			 * 
-			 */
-
-		}
+		/*
+		 * calculate next movie color trzeba by uzyc - ze jaki teraz mam uzyc
+		 * kolor tak naprawde, a nie ze tylko z pola from kolor ma byæ inny niz
+		 * na polu to - ale moze to sprawdzac sobie w tej metodzie tutaj wewn¹trz validateMove a nie ze wewnatrz wewnatrz...
+		 * 
+		 * np pobieram nextColor TUTAJ i musi byæ== colorowi z pola FROM !!!!! i dalej juz bez problemu moj kod dziala w poszczegolnych figurach
+		 * FIXME i isMoveToDestination return true - to daæ w
+		 * pierwszym warunku if ³¹cznie z basic validation i tutaj daæ:
+		 * board.setPieceAt(movedPiece, to); board.setPieceAt(null, from); i
+		 * tutaj tez ustawiam rodzaj ruchu a InvalidMoveExc wyrzucê tutaj jeœli
+		 * isMoveToDest da mi false
+		 * 
+		 */
 
 		return null;
 	}
