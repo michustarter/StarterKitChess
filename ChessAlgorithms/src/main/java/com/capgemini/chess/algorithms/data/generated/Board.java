@@ -9,20 +9,25 @@ import com.capgemini.chess.algorithms.data.enums.BoardState;
 import com.capgemini.chess.algorithms.data.enums.Piece;
 
 /**
- * Board representation.
- * Board objects are generated based on move history.
+ * Board representation. Board objects are generated based on move history.
+ * 
+ * Obiekty planszy generowane na podstawie historii ruchów !!
  * 
  * @author Michal Bejm
  *
  */
 public class Board {
-	
+
 	public static final int SIZE = 8;
-	
+
 	private Piece[][] pieces = new Piece[SIZE][SIZE];
 	private List<Move> moveHistory = new ArrayList<>();
+	/*
+	 * w tablicy zapisuje zmiany na planszy dokonane, z niej dostanê info o
+	 * stanie planszy
+	 */
 	private BoardState state;
-	
+
 	public Board() {
 	}
 
@@ -41,22 +46,28 @@ public class Board {
 	public void setState(BoardState state) {
 		this.state = state;
 	}
-	
+
 	/**
-	 * Sets chess piece on board based on given coordinates
+	 * Sets chess piece on board based on given coordinates Ustawia figurê na
+	 * planszy na podstawie podanych wspó³rzêdnych
 	 * 
-	 * @param piece chess piece
-	 * @param board chess board
-	 * @param coordinate given coordinates
+	 * @param piece
+	 *            chess piece
+	 * @param board
+	 *            chess board
+	 * @param coordinate
+	 *            given coordinates
 	 */
 	public void setPieceAt(Piece piece, Coordinate coordinate) {
 		pieces[coordinate.getX()][coordinate.getY()] = piece;
 	}
-	
+
 	/**
-	 * Gets chess piece from board based on given coordinates
+	 * Gets chess piece from board based on given coordinates Zwraca figurê
+	 * która ustawiona jest na miejscu w planszy o podanych wspó³rzêdnych
 	 * 
-	 * @param coordinate given coordinates
+	 * @param coordinate
+	 *            given coordinates
 	 * @return chess piece
 	 */
 	public Piece getPieceAt(Coordinate coordinate) {

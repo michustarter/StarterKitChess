@@ -16,7 +16,7 @@ import com.capgemini.chess.algorithms.implementation.exceptions.KingInCheckExcep
 
 /**
  * Class for managing of basic operations on the Chess Board.
- *
+ * 
  * @author Michal Bejm
  *
  */
@@ -47,6 +47,8 @@ public class BoardManager {
 	public Board getBoard() {
 		return this.board;
 	}
+
+	private PieceFactory factory;
 
 	/**
 	 * Performs move of the chess piece on the chess board from one field to
@@ -101,7 +103,7 @@ public class BoardManager {
 
 	/**
 	 * Checks threefold repetition rule (one of the conditions to end the chess
-	 * game with a draw).
+	 * game with a draw). // remisem
 	 *
 	 * @return true if current state repeated at list two times, false otherwise
 	 */
@@ -232,8 +234,17 @@ public class BoardManager {
 	}
 
 	private Move validateMove(Coordinate from, Coordinate to) throws InvalidMoveException, KingInCheckException {
-
 		// TODO please add implementation here
+		Validation basic = new Validation();
+
+		if (basic.basicValidation(from, to, board)) {
+
+			PieceType movedPiece = this.board.getPieceAt(from).getType();
+
+			factory.returnPiece(movedPiece).determinePath(from, to, board);
+
+		}
+
 		return null;
 	}
 
