@@ -241,7 +241,15 @@ public class BoardManager {
 
 			PieceType movedPiece = this.board.getPieceAt(from).getType();
 
-			factory.returnPiece(movedPiece).determinePath(from, to, board);
+			factory.returnPiece(movedPiece).isMoveToDestination(from, to, board);
+			/*
+			 * FIXME i isMoveToDestination return true - to daæ w pierwszym
+			 * warunku if ³¹cznie z basic validation i tutaj daæ:
+			 * board.setPieceAt(movedPiece, to); board.setPieceAt(null, from); i
+			 * tutaj tez ustawiam rodzaj ruchu a InvalidMoveExc wyrzucê tutaj
+			 * jeœli isMoveToDest da mi false
+			 * 
+			 */
 
 		}
 

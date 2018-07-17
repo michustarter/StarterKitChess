@@ -7,7 +7,9 @@ import com.capgemini.chess.algorithms.implementation.exceptions.InvalidMoveExcep
 public class Knight implements PieceOnBoard {
 
 	@Override
-	public void determinePath(Coordinate from, Coordinate to, Board board) throws InvalidMoveException {
+	public boolean isMoveToDestination(Coordinate from, Coordinate to, Board board) throws InvalidMoveException {
+
+		return false;
 
 	}
 }
