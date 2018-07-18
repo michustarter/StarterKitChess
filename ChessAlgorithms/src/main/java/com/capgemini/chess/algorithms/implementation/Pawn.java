@@ -22,7 +22,7 @@ public class Pawn implements PieceOnBoard {
 		Color pawnColor = board.getPieceAt(from).getColor();
 
 		if (pawnColor == Color.WHITE) {
-			yStart = 2;
+			yStart = 1;
 			singleStep = 1;
 			doubleStep = 2;
 		} else {

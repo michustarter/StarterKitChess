@@ -263,7 +263,7 @@ public class BoardManager {
 		Move executedMove = new Move();
 		PieceOnBoard chosenPiece;
 
-		if (calculateNextMoveColor() != movedPiece.getColor()) {
+		if (movedPiece.getColor() != calculateNextMoveColor()) {
 			throw new OpponentColorException();
 		}
 
@@ -271,14 +271,18 @@ public class BoardManager {
 		if (!chosenPiece.isPathPossible(from, to, board)) {
 			throw new InvalidMoveException();
 		}
+		Board tempBoard = board;
+		board.setPieceAt(movedPiece, to);
+		board.setPieceAt(null, from);
+		if (isKingInCheck(movedPiece.getColor())) {
+			board = tempBoard;
+			throw new KingInCheckException();
+		}
+		board = tempBoard;
 		if (pieceAtTo != null) {
 			executedMove.setType(MoveType.CAPTURE);
 		} else {
 			executedMove.setType(MoveType.ATTACK);
-		}
-
-		if (isKingInCheck(movedPiece.getColor())) {
-			throw new KingInCheckException();
 		}
 		executedMove.setFrom(from);
 		executedMove.setTo(to);
