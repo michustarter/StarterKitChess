@@ -1,7 +1,6 @@
 package com.capgemini.chess.algorithms.implementation;
 
 import com.capgemini.chess.algorithms.data.Coordinate;
-import com.capgemini.chess.algorithms.data.enums.Piece;
 import com.capgemini.chess.algorithms.data.generated.Board;
 import com.capgemini.chess.algorithms.implementation.exceptions.EqualFieldCoordinatesException;
 import com.capgemini.chess.algorithms.implementation.exceptions.FromFieldCoordinatesOutsideBoardException;
@@ -17,7 +16,6 @@ public class Validation {
 		int xFrom = from.getX();
 		int yTo = to.getY();
 		int xTo = to.getX();
-		Piece pieceAtFrom = board.getPieceAt(from);
 		boolean isRangeFromField = yFrom >= 0 && yFrom < Board.SIZE && xFrom >= 0 && xFrom < Board.SIZE;
 		boolean isRangeToField = yTo >= 0 && yTo < Board.SIZE && xTo >= 0 && xTo < Board.SIZE;
 
@@ -27,7 +25,7 @@ public class Validation {
 		if (!isRangeToField) {
 			throw new ToFieldCoordinatesOutsideBoardException();
 		}
-		if (pieceAtFrom == null) {
+		if (board.getPieceAt(from) == null) {
 			throw new NullFromFieldException();
 		}
 		if (from.equals(to)) {

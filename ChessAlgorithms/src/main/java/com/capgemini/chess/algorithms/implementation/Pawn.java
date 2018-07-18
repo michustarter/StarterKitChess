@@ -37,15 +37,22 @@ public class Pawn implements PieceOnBoard {
 			}
 			return isPossibility;
 
-		} else if (yFrom == yStart && ((yFrom + doubleStep) == yTo && fieldAtTo == null)) {
+		}
+		if (yFrom == yStart && ((yFrom + doubleStep) == yTo && fieldAtTo == null)) {
 			if (board.getPieceAt(new Coordinate(xFrom, yFrom + singleStep)) == null) {
 				isPossibility = true;
 				return isPossibility;
 			}
 			return isPossibility;
-		} else if (yFrom != yStart && (yFrom + singleStep) == yTo && fieldAtTo == null) {
+		}
+		if (yFrom != yStart && (yFrom + singleStep) == yTo && xFrom == xTo && fieldAtTo == null) {
 			isPossibility = true;
 			return isPossibility;
+		} else if (yFrom != yStart && (yFrom + singleStep) == yTo && fieldAtTo != null) {
+			if ((xFrom - 1 == xTo) || (xFrom + 1 == xTo)) {
+				isPossibility = true;
+				return isPossibility;
+			}
 		}
 		return isPossibility;
 	}

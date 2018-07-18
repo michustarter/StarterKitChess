@@ -167,7 +167,8 @@ public class BoardManager {
 			while (x < Board.SIZE) {
 				found = new Coordinate(x, y);
 				wantedKing = board.getPieceAt(found);
-				if (wantedKing.getType() == PieceType.KING && wantedKing.getColor() == kingColor) {
+				if (wantedKing != null && wantedKing.getType() == PieceType.KING
+						&& wantedKing.getColor() == kingColor) {
 					return found;
 				}
 				x++;
@@ -177,7 +178,6 @@ public class BoardManager {
 		}
 		return found;
 	}
-
 	// PRIVATE
 
 	private void initBoard() {
@@ -257,6 +257,7 @@ public class BoardManager {
 	}
 
 	private Move validateMove(Coordinate from, Coordinate to) throws InvalidMoveException, KingInCheckException {
+		Validation.basicValidation(from, to, board);
 		Piece movedPiece = board.getPieceAt(from);
 		Piece pieceAtTo = board.getPieceAt(to);
 		Move executedMove = new Move();
@@ -265,18 +266,17 @@ public class BoardManager {
 		if (calculateNextMoveColor() != movedPiece.getColor()) {
 			throw new OpponentColorException();
 		}
-		Validation.basicValidation(from, to, board);
-		chosenPiece = PieceFactory.returnPiece(movedPiece.getType());
-		if (chosenPiece.isPathPossible(from, to, board)) {
-			if (pieceAtTo != null) {
-				executedMove.setType(MoveType.CAPTURE);
-			} else {
-				executedMove.setType(MoveType.ATTACK);
-			}
 
-			board.setPieceAt(movedPiece, to);
-			board.setPieceAt(null, from);
+		chosenPiece = PieceFactory.returnPiece(movedPiece.getType());
+		if (!chosenPiece.isPathPossible(from, to, board)) {
+			throw new InvalidMoveException();
 		}
+		if (pieceAtTo != null) {
+			executedMove.setType(MoveType.CAPTURE);
+		} else {
+			executedMove.setType(MoveType.ATTACK);
+		}
+
 		if (isKingInCheck(movedPiece.getColor())) {
 			throw new KingInCheckException();
 		}
@@ -299,7 +299,7 @@ public class BoardManager {
 			while (x < Board.SIZE) {
 				searched = new Coordinate(x, y);
 				found = board.getPieceAt(searched);
-				if (found.getType() != null && found.getColor() != kingColor) {
+				if (found != null && found.getColor() != kingColor) {
 					checkedPiece = PieceFactory.returnPiece(found.getType());
 					opponentPieces.put(searched, checkedPiece);
 				}
@@ -308,8 +308,8 @@ public class BoardManager {
 			x = 0;
 			y++;
 		}
-		for (Coordinate key : opponentPieces.keySet()) {
-			if (opponentPieces.get(key).isPathPossible(key, lookForKing(kingColor), board)) {
+		for (Coordinate from : opponentPieces.keySet()) {
+			if (opponentPieces.get(from).isPathPossible(from, lookForKing(kingColor), board)) {
 				result = true;
 				return result;
 			}
@@ -344,9 +344,8 @@ public class BoardManager {
 			y++;
 		}
 		for (Coordinate from : nextPieces.keySet()) {
-			for (int i = 0; i < otherFileds.size(); i++) {
-				if (nextPieces.get(from).isPathPossible(from, otherFileds.get(i), board)
-						&& !isKingInCheck(nextMoveColor)) {
+			for (Coordinate to : otherFileds) {
+				if (nextPieces.get(from).isPathPossible(from, to, board) && !isKingInCheck(nextMoveColor)) {
 					result = true;
 					return result;
 				}

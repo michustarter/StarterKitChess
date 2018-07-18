@@ -13,9 +13,9 @@ public class Bishop implements PieceOnBoard {
 		int xTo = to.getX();
 		boolean isPossibility = false;
 
-		if (xFrom <= xTo) {
-			int i = 0;
-			if (yFrom <= yTo) {
+		if (xFrom < xTo) {
+			int i = 1;
+			if (yFrom + i <= yTo) {
 				while (yFrom <= yTo) {
 					if ((xFrom + i == xTo) && (yFrom + i == yTo)) {
 						isPossibility = true;
@@ -28,7 +28,7 @@ public class Bishop implements PieceOnBoard {
 					i++;
 				}
 			} else if (yFrom >= yTo) {
-				while (yFrom >= yTo) {
+				while (yFrom - i >= yTo) {
 					if ((xFrom + i == xTo) && (yFrom - i == yTo)) {
 						isPossibility = true;
 						return isPossibility;
@@ -41,10 +41,10 @@ public class Bishop implements PieceOnBoard {
 				}
 			}
 		}
-		if (xFrom >= xTo) {
-			int i = 0;
+		if (xFrom > xTo) {
+			int i = 1;
 			if (yFrom <= yTo) {
-				while (yFrom <= yTo) {
+				while (yFrom + i <= yTo) {
 					if ((xFrom - i == xTo) && (yFrom + i == yTo)) {
 						isPossibility = true;
 						return isPossibility;
@@ -56,7 +56,7 @@ public class Bishop implements PieceOnBoard {
 					i++;
 				}
 			} else if (yFrom >= yTo) {
-				while (yFrom >= yTo) {
+				while (yFrom - i >= yTo) {
 					if ((xFrom - i == xTo) && (yFrom - i == yTo)) {
 						isPossibility = true;
 						return isPossibility;

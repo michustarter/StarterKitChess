@@ -14,7 +14,7 @@ public class Rook implements PieceOnBoard {
 		int xTo = to.getX();
 		boolean isPossibility = false;
 		if (yFrom == yTo) {
-			int i = 0;
+			int i = 1;
 			if (xFrom <= xTo) {
 				while (xFrom + i <= xTo) {
 					if (xFrom + i == xTo) {
@@ -42,7 +42,7 @@ public class Rook implements PieceOnBoard {
 			}
 		}
 		if (xFrom == xTo) {
-			int i = 0;
+			int i = 1;
 			if (yFrom <= yTo) {
 				while (yFrom + i <= yTo) {
 					if (yFrom + i == yTo) {
