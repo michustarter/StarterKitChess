@@ -16,7 +16,6 @@ import com.capgemini.chess.algorithms.data.enums.PieceType;
 import com.capgemini.chess.algorithms.data.generated.Board;
 import com.capgemini.chess.algorithms.implementation.exceptions.InvalidMoveException;
 import com.capgemini.chess.algorithms.implementation.exceptions.KingInCheckException;
-import com.capgemini.chess.algorithms.implementation.exceptions.OpponentColorException;
 
 /**
  * Class for managing of basic operations on the Chess Board.
@@ -264,7 +263,7 @@ public class BoardManager {
 		PieceOnBoard chosenPiece;
 
 		if (movedPiece.getColor() != calculateNextMoveColor()) {
-			throw new OpponentColorException();
+			throw new InvalidMoveException();
 		}
 
 		chosenPiece = PieceFactory.returnPiece(movedPiece.getType());
@@ -339,7 +338,7 @@ public class BoardManager {
 				if (wantedPiece != null && wantedPiece.getColor() == nextMoveColor) {
 					myPiece = PieceFactory.returnPiece(wantedPiece.getType());
 					nextPieces.put(verified, myPiece);
-				} else {
+				} else if (wantedPiece != null && wantedPiece.getColor() != nextMoveColor) {
 					otherFileds.add(verified);
 				}
 				x++;
