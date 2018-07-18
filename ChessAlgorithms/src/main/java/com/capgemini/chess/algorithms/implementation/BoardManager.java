@@ -1,5 +1,6 @@
 package com.capgemini.chess.algorithms.implementation;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -15,6 +16,7 @@ import com.capgemini.chess.algorithms.data.enums.PieceType;
 import com.capgemini.chess.algorithms.data.generated.Board;
 import com.capgemini.chess.algorithms.implementation.exceptions.InvalidMoveException;
 import com.capgemini.chess.algorithms.implementation.exceptions.KingInCheckException;
+import com.capgemini.chess.algorithms.implementation.exceptions.OpponentColorException;
 
 /**
  * Class for managing of basic operations on the Chess Board.
@@ -155,6 +157,27 @@ public class BoardManager {
 		return true;
 	}
 
+	public Coordinate lookForKing(Color kingColor) {
+		int x = 0;
+		int y = 0;
+		Piece wantedKing;
+		Coordinate found = new Coordinate(x, y);
+
+		while (y < Board.SIZE) {
+			while (x < Board.SIZE) {
+				found = new Coordinate(x, y);
+				wantedKing = board.getPieceAt(found);
+				if (wantedKing.getType() == PieceType.KING && wantedKing.getColor() == kingColor) {
+					return found;
+				}
+				x++;
+			}
+			x = 0;
+			y++;
+		}
+		return found;
+	}
+
 	// PRIVATE
 
 	private void initBoard() {
@@ -234,23 +257,32 @@ public class BoardManager {
 	}
 
 	private Move validateMove(Coordinate from, Coordinate to) throws InvalidMoveException, KingInCheckException {
-
-		Move executedMove = null;
-		Color pieceColor = board.getPieceAt(from).getColor();
 		Piece movedPiece = board.getPieceAt(from);
+		Piece pieceAtTo = board.getPieceAt(to);
+		Move executedMove = new Move();
 		PieceOnBoard chosenPiece;
 
-		Validation.basicValidation(from, to, board);
-		
-		if (calculateNextMoveColor() == pieceColor) {
-			chosenPiece = PieceFactory.returnPiece(movedPiece.getType());
-			if (chosenPiece.isMoveToDestination(from, to, board)) {
-				board.setPieceAt(movedPiece, to);
-				board.setPieceAt(null, from);
-			}
-			if (isKingInCheck(pieceColor)) {
-			}
+		if (calculateNextMoveColor() != movedPiece.getColor()) {
+			throw new OpponentColorException();
 		}
+		Validation.basicValidation(from, to, board);
+		chosenPiece = PieceFactory.returnPiece(movedPiece.getType());
+		if (chosenPiece.isMoveToDestination(from, to, board)) {
+			if (pieceAtTo != null) {
+				executedMove.setType(MoveType.CAPTURE);
+			} else {
+				executedMove.setType(MoveType.ATTACK);
+			}
+
+			board.setPieceAt(movedPiece, to);
+			board.setPieceAt(null, from);
+		}
+		if (isKingInCheck(movedPiece.getColor())) {
+			throw new KingInCheckException();
+		}
+		executedMove.setFrom(from);
+		executedMove.setTo(to);
+		executedMove.setMovedPiece(movedPiece);
 
 		return executedMove;
 	}
@@ -260,13 +292,16 @@ public class BoardManager {
 		int y = 0;
 		boolean result = false;
 		PieceOnBoard checkedPiece;
+		Coordinate searched = new Coordinate(x, y);
+		Piece found = board.getPieceAt(searched);
 		Map<Coordinate, PieceOnBoard> opponentPieces = new HashMap<>();
 		while (y < Board.SIZE) {
 			while (x < Board.SIZE) {
-				if (board.getPieceAt(new Coordinate(x, y)) != null
-						&& board.getPieceAt(new Coordinate(x, y)).getColor() != kingColor) {
-					checkedPiece = PieceFactory.returnPiece(board.getPieceAt(new Coordinate(x, y)).getType());
-					opponentPieces.put(new Coordinate(x, y), checkedPiece);
+				searched = new Coordinate(x, y);
+				found = board.getPieceAt(searched);
+				if (found.getType() != null && found.getColor() != kingColor) {
+					checkedPiece = PieceFactory.returnPiece(found.getType());
+					opponentPieces.put(searched, checkedPiece);
 				}
 				x++;
 			}
@@ -274,7 +309,7 @@ public class BoardManager {
 			y++;
 		}
 		for (Coordinate key : opponentPieces.keySet()) {
-			if (opponentPieces.get(key).isMoveToDestination(key, kingCoordinates(kingColor), board)) {
+			if (opponentPieces.get(key).isMoveToDestination(key, lookForKing(kingColor), board)) {
 				result = true;
 				return result;
 			}
@@ -283,36 +318,42 @@ public class BoardManager {
 	}
 
 	private boolean isAnyMoveValid(Color nextMoveColor) {
+
 		// TODO please add implementation here
-		/*
-		 * z board pobraæ pola które s¹ puste i dodaæ je do jakiejœ listy sobie
-		 * np i iterowaæ po kazdym elemencie z listy czy do niego mozna dojsc
-		 * pionkami przeciwnika
-		 */
-
-		return false;
-	}
-
-	private Coordinate kingCoordinates(Color kingColor) {
 		int x = 0;
 		int y = 0;
-		Coordinate findCoordinate = new Coordinate(x, y);
-
+		Piece wantedPiece;
+		boolean result = false;
+		PieceOnBoard myPiece;
+		PieceOnBoard opponent;
+		Coordinate verified = new Coordinate(x, y);
+		Map<Coordinate, PieceOnBoard> movePieces = new HashMap<>();
+		Map<Coordinate, PieceOnBoard> opponentPieces = new HashMap<>();
+		List<Coordinate> nullFields = new ArrayList<>();
+		
 		while (y < Board.SIZE) {
 			while (x < Board.SIZE) {
-				if (board.getPieceAt(new Coordinate(x, y)).getType() == PieceType.KING
-						&& board.getPieceAt(new Coordinate(x, y)).getColor() == kingColor) {
-					findCoordinate = new Coordinate(x, y);
-					return findCoordinate;
+				verified = new Coordinate(x, y);
+				wantedPiece = board.getPieceAt(verified);
+				if (wantedPiece!=null && wantedPiece.getColor()==nextMoveColor) {
+					myPiece=PieceFactory.returnPiece(wantedPiece.getType());
+					movePieces.put(verified, myPiece);
+				}
+				if (wantedPiece!=null && wantedPiece.getColor()!=nextMoveColor){
+					opponent=PieceFactory.returnPiece(wantedPiece.getType());
+					opponentPieces.put(verified, opponent);
+				} else {
+					nullFields.add(verified);
+					
 				}
 				x++;
 			}
 			x = 0;
 			y++;
 		}
+		
 
-		return findCoordinate;
-
+		return result;
 	}
 
 	private Color calculateNextMoveColor() {
