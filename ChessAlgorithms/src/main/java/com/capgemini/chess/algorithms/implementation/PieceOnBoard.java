@@ -5,6 +5,6 @@ import com.capgemini.chess.algorithms.data.generated.Board;
 
 public interface PieceOnBoard {
 
-	public boolean isMoveToDestination(Coordinate from, Coordinate to, Board board);
+	public boolean isPathPossible(Coordinate from, Coordinate to, Board board);
 
 }

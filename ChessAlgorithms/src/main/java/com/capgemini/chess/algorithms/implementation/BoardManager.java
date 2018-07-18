@@ -267,7 +267,7 @@ public class BoardManager {
 		}
 		Validation.basicValidation(from, to, board);
 		chosenPiece = PieceFactory.returnPiece(movedPiece.getType());
-		if (chosenPiece.isMoveToDestination(from, to, board)) {
+		if (chosenPiece.isPathPossible(from, to, board)) {
 			if (pieceAtTo != null) {
 				executedMove.setType(MoveType.CAPTURE);
 			} else {
@@ -309,7 +309,7 @@ public class BoardManager {
 			y++;
 		}
 		for (Coordinate key : opponentPieces.keySet()) {
-			if (opponentPieces.get(key).isMoveToDestination(key, lookForKing(kingColor), board)) {
+			if (opponentPieces.get(key).isPathPossible(key, lookForKing(kingColor), board)) {
 				result = true;
 				return result;
 			}
@@ -319,40 +319,39 @@ public class BoardManager {
 
 	private boolean isAnyMoveValid(Color nextMoveColor) {
 
-		// TODO please add implementation here
 		int x = 0;
 		int y = 0;
 		Piece wantedPiece;
 		boolean result = false;
 		PieceOnBoard myPiece;
-		PieceOnBoard opponent;
 		Coordinate verified = new Coordinate(x, y);
-		Map<Coordinate, PieceOnBoard> movePieces = new HashMap<>();
-		Map<Coordinate, PieceOnBoard> opponentPieces = new HashMap<>();
-		List<Coordinate> nullFields = new ArrayList<>();
-		
+		Map<Coordinate, PieceOnBoard> nextPieces = new HashMap<>();
+		List<Coordinate> otherFileds = new ArrayList<>();
+
 		while (y < Board.SIZE) {
 			while (x < Board.SIZE) {
 				verified = new Coordinate(x, y);
 				wantedPiece = board.getPieceAt(verified);
-				if (wantedPiece!=null && wantedPiece.getColor()==nextMoveColor) {
-					myPiece=PieceFactory.returnPiece(wantedPiece.getType());
-					movePieces.put(verified, myPiece);
-				}
-				if (wantedPiece!=null && wantedPiece.getColor()!=nextMoveColor){
-					opponent=PieceFactory.returnPiece(wantedPiece.getType());
-					opponentPieces.put(verified, opponent);
+				if (wantedPiece != null && wantedPiece.getColor() == nextMoveColor) {
+					myPiece = PieceFactory.returnPiece(wantedPiece.getType());
+					nextPieces.put(verified, myPiece);
 				} else {
-					nullFields.add(verified);
-					
+					otherFileds.add(verified);
 				}
 				x++;
 			}
 			x = 0;
 			y++;
 		}
-		
-
+		for (Coordinate from : nextPieces.keySet()) {
+			for (int i = 0; i < otherFileds.size(); i++) {
+				if (nextPieces.get(from).isPathPossible(from, otherFileds.get(i), board)
+						&& !isKingInCheck(nextMoveColor)) {
+					result = true;
+					return result;
+				}
+			}
+		}
 		return result;
 	}
 

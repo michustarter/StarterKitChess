@@ -6,7 +6,7 @@ import com.capgemini.chess.algorithms.data.generated.Board;
 public class Bishop implements PieceOnBoard {
 
 	@Override
-	public boolean isMoveToDestination(Coordinate from, Coordinate to, Board board) {
+	public boolean isPathPossible(Coordinate from, Coordinate to, Board board) {
 		int yFrom = from.getY();
 		int xFrom = from.getX();
 		int yTo = to.getY();

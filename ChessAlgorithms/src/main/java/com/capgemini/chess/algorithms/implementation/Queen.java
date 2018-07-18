@@ -13,10 +13,10 @@ public class Queen implements PieceOnBoard {
 	 */
 
 	@Override
-	public boolean isMoveToDestination(Coordinate from, Coordinate to, Board board) {
+	public boolean isPathPossible(Coordinate from, Coordinate to, Board board) {
 
-		boolean bishopPath = bishop.isMoveToDestination(from, to, board);
-		boolean rookPath = rook.isMoveToDestination(from, to, board);
+		boolean bishopPath = bishop.isPathPossible(from, to, board);
+		boolean rookPath = rook.isPathPossible(from, to, board);
 
 		return bishopPath || rookPath;
 

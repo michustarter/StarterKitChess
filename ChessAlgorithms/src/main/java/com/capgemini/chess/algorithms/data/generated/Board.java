@@ -11,7 +11,6 @@ import com.capgemini.chess.algorithms.data.enums.Piece;
 /**
  * Board representation. Board objects are generated based on move history.
  * 
- * Obiekty planszy generowane na podstawie historii ruchów !!
  * 
  * @author Michal Bejm
  *
@@ -22,10 +21,7 @@ public class Board {
 
 	private Piece[][] pieces = new Piece[SIZE][SIZE];
 	private List<Move> moveHistory = new ArrayList<>();
-	/*
-	 * w tablicy zapisuje zmiany na planszy dokonane, z niej dostanê info o
-	 * stanie planszy
-	 */
+	
 	private BoardState state;
 
 	public Board() {
