@@ -353,6 +353,7 @@ public class BoardManager {
 					return result;
 				}
 			}
+
 		}
 		return result;
 	}

@@ -15,6 +15,7 @@ import com.capgemini.chess.algorithms.data.enums.Piece;
 import com.capgemini.chess.algorithms.data.generated.Board;
 import com.capgemini.chess.algorithms.implementation.exceptions.InvalidMoveException;
 import com.capgemini.chess.algorithms.implementation.exceptions.KingInCheckException;
+import com.capgemini.chess.algorithms.implementation.exceptions.NullFromFieldException;
 
 /**
  * Test class for testing {@link BoardManager}
@@ -867,5 +868,25 @@ public class BoardManagerTest {
 			}
 		}
 		return counter;
+	}
+	@Test
+	public void testPerformMoveIfFieldFromIsNull() {
+		// given
+		Board board = new Board();
+		board.setPieceAt(Piece.BLACK_PAWN, new Coordinate(4, 0));
+		board.setPieceAt(Piece.WHITE_BISHOP, new Coordinate(4, 5));
+		board.setPieceAt(Piece.BLACK_ROOK, new Coordinate(4, 7));
+		
+		// when
+		BoardManager boardManager = new BoardManager(board);
+		boolean exceptionThrown = false;
+		try {
+			boardManager.performMove(new Coordinate(4, 3), new Coordinate(7, 2));
+		} catch (InvalidMoveException e) {
+			exceptionThrown = e instanceof NullFromFieldException;
+		}
+		
+		// then 
+		assertTrue(exceptionThrown);
 	}
 }
