@@ -14,6 +14,7 @@ import org.junit.Test;
 import com.capgemini.chess.algorithms.data.Coordinate;
 import com.capgemini.chess.algorithms.data.Move;
 import com.capgemini.chess.algorithms.data.enums.BoardState;
+import com.capgemini.chess.algorithms.data.enums.Color;
 import com.capgemini.chess.algorithms.data.enums.MoveType;
 import com.capgemini.chess.algorithms.data.enums.Piece;
 import com.capgemini.chess.algorithms.data.generated.Board;
@@ -1269,5 +1270,19 @@ public class BoardManagerTest {
 
 		// then
 		assertTrue(exceptionThrown);
+	}
+
+	@Test
+	public void testFindKingWhenColorIsKnown() throws InvalidMoveException {
+		// given
+		Board board = new Board();
+		board.setPieceAt(Piece.WHITE_KING, new Coordinate(5, 3));
+
+		// when
+		BoardManager boardManager = new BoardManager(board);
+		boardManager.lookForKing(Color.WHITE);
+
+		// then
+		assertEquals(new Coordinate(5, 3), new Coordinate(5, 3));
 	}
 }

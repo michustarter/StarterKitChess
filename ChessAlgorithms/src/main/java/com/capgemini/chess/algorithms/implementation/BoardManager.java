@@ -157,7 +157,7 @@ public class BoardManager {
 		return true;
 	}
 
-	public Coordinate lookForKing(Color kingColor) {
+	public Coordinate lookForKing(Color kingColor) throws NullPointerException{
 		int x = 0;
 		int y = 0;
 		Piece wantedKing;
@@ -291,7 +291,7 @@ public class BoardManager {
 		return executedMove;
 	}
 
-	private boolean isKingInCheck(Color kingColor) {
+	private boolean isKingInCheck(Color kingColor) throws NullPointerException{
 		int x = 0;
 		int y = 0;
 		boolean result = false;
@@ -329,13 +329,6 @@ public class BoardManager {
 		boolean result = false;
 		PieceOnBoard myPiece;
 		Coordinate verified;
-		Color opponentColor;
-
-		if (nextMoveColor == Color.WHITE) {
-			opponentColor = Color.BLACK;
-		} else {
-			opponentColor = Color.WHITE;
-		}
 
 		Map<Coordinate, PieceOnBoard> nextPiece = new HashMap<>();
 		List<Coordinate> otherFileds = new ArrayList<>();
@@ -359,8 +352,7 @@ public class BoardManager {
 
 		for (Coordinate from : nextPiece.keySet()) {
 			for (Coordinate to : otherFileds) {
-				if (nextPiece.get(from).isPathPossible(from, to, board) && !isKingInCheck(opponentColor)
-						&& !isKingInCheck(nextMoveColor)) {
+				if (nextPiece.get(from).isPathPossible(from, to, board) && !isKingInCheck(nextMoveColor)) {
 					result = true;
 					return result;
 				}
