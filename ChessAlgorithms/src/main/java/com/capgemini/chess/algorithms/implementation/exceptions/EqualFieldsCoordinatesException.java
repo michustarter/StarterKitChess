@@ -8,5 +8,6 @@ public class EqualFieldsCoordinatesException extends InvalidMoveException {
 	private static final long serialVersionUID = -6295998934486212486L;
 
 	public EqualFieldsCoordinatesException() {
+		super("Coordinates of fields from and to are equal!");
 	}
 }

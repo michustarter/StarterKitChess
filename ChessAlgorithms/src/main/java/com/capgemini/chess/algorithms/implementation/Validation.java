@@ -6,7 +6,7 @@ import com.capgemini.chess.algorithms.implementation.exceptions.EqualFieldsCoord
 import com.capgemini.chess.algorithms.implementation.exceptions.FromFieldCoordinatesOutsideBoardException;
 import com.capgemini.chess.algorithms.implementation.exceptions.InvalidMoveException;
 import com.capgemini.chess.algorithms.implementation.exceptions.NullFromFieldException;
-import com.capgemini.chess.algorithms.implementation.exceptions.OpponentColorException;
+import com.capgemini.chess.algorithms.implementation.exceptions.CaptureYourPieceException;
 import com.capgemini.chess.algorithms.implementation.exceptions.ToFieldCoordinatesOutsideBoardException;
 
 public class Validation {
@@ -29,11 +29,11 @@ public class Validation {
 		if (board.getPieceAt(from) == null) {
 			throw new NullFromFieldException();
 		}
-		if (from == to) {
+		if (from.equals(to)) {
 			throw new EqualFieldsCoordinatesException();
 		}
 		if (board.getPieceAt(to) != null && (board.getPieceAt(to).getColor() == board.getPieceAt(from).getColor())) {
-			throw new OpponentColorException();
+			throw new CaptureYourPieceException();
 		}
 	}
 }

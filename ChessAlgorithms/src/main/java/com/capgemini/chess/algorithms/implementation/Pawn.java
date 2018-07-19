@@ -14,25 +14,23 @@ public class Pawn implements PieceOnBoard {
 		int xFrom = from.getX();
 		int yTo = to.getY();
 		int xTo = to.getX();
-		int yStart;
-		int singleStep;
-		int doubleStep;
+		int yStart = 1;
+		int singleStep = 1;
+		int doubleStep = 2;
 		boolean isPossibility = false;
 		Piece fieldAtTo = board.getPieceAt(new Coordinate(xTo, yTo));
 		Color pawnColor = board.getPieceAt(from).getColor();
 
-		if (pawnColor == Color.WHITE) {
-			yStart = 1;
-			singleStep = 1;
-			doubleStep = 2;
-		} else {
+		if (pawnColor == Color.BLACK) {
 			yStart = 6;
-			singleStep = -1;
-			doubleStep = -2;
+			singleStep = (-1);
+			doubleStep = (-2);
 		}
+
 		if (yFrom == yStart && ((yFrom + singleStep) == yTo && fieldAtTo == null)) {
 			isPossibility = true;
 			if ((xFrom - 1 == xTo) || (xFrom + 1 == xTo)) {
+				isPossibility = true;
 				return isPossibility;
 			}
 			return isPossibility;

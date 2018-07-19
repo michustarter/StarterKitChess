@@ -8,5 +8,6 @@ public class ToFieldCoordinatesOutsideBoardException extends InvalidMoveExceptio
 	private static final long serialVersionUID = -2697173672721540908L;
 
 	public ToFieldCoordinatesOutsideBoardException() {
+		super("Coordinates of field To are outside the board!");
 	}
 }
