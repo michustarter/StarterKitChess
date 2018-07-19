@@ -11,7 +11,12 @@ import com.capgemini.chess.algorithms.implementation.exceptions.ToFieldCoordinat
 
 public class Validation {
 	/**
-	 * co robi metodaaa opisaæ
+	 * Metoda sprawdza 5 podstawowych warunków, które musz¹ zostaæ spe³nione, by
+	 * mo¿na by³o rozpatrzeæ dalsze mo¿liwoœci wykonywania ruchu: 
+	 * 1. Czy pole FROM znajduje siê na planszy 2. Czy pole TO znajduje siê na  planszy 
+	 * 3. Czy na polu FROM jest jakaœ bierka 
+	 * 4. Czy pole TO nie jest równe polu FROM 
+	 * 5. Czy kolor bierki na polu TO jest ró¿ny od koloru na polu FROM
 	 * 
 	 * @param from
 	 * @param to

@@ -7,10 +7,6 @@ public class Queen implements PieceOnBoard {
 
 	Bishop bishop = new Bishop();
 	Rook rook = new Rook();
-	/*
-	 * Jeœli bêdzie b³¹d tutaj - to moze przeniesc te deklaracje bishop i rook
-	 * do wnêtrza metody!
-	 */
 
 	@Override
 	public boolean isPathPossible(Coordinate from, Coordinate to, Board board) {

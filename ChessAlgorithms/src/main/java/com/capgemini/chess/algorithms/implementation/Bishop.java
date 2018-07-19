@@ -33,7 +33,6 @@ public class Bishop implements PieceOnBoard {
 						isPossibility = true;
 						return isPossibility;
 					}
-					//zwraca false
 					if (board.getPieceAt(new Coordinate(xFrom + i, yFrom - i)) != null) {
 						isPossibility = false;
 						return isPossibility;

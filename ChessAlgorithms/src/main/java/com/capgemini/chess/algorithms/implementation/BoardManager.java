@@ -17,13 +17,6 @@ import com.capgemini.chess.algorithms.data.generated.Board;
 import com.capgemini.chess.algorithms.implementation.exceptions.InvalidMoveException;
 import com.capgemini.chess.algorithms.implementation.exceptions.KingInCheckException;
 
-/**
- * Class for managing of basic operations on the Chess Board.
- * 
- * @author Michal Bejm
- *
- */
-
 public class BoardManager {
 
 	private Board board = new Board();
@@ -157,7 +150,14 @@ public class BoardManager {
 		return true;
 	}
 
-	public Coordinate lookForKing(Color kingColor) throws NullPointerException{
+	/**
+	 * Metoda szuka Króla na planszy o kolorze przekazanym jako parametr
+	 * 
+	 * @param kingColor
+	 * @return
+	 * @throws NullPointerException
+	 */
+	public Coordinate lookForKing(Color kingColor) throws NullPointerException {
 		int x = 0;
 		int y = 0;
 		Piece wantedKing;
@@ -256,29 +256,40 @@ public class BoardManager {
 		this.board.setPieceAt(null, lastMove.getTo());
 	}
 
+	/**
+	 * Walidacja ruchu. Po metodzie determinePath tworzona jest tymczasowa
+	 * tablica, która zachowuje obecny stan planszy, a w planszy zapisujê
+	 * teoretyczny jej stan po wykonaniu ruchu. Nastêpnie sprawdzam, czy
+	 * wykonany ruch nie spowoduje szacha dla mojego Króla; nastêpnie ponownie
+	 * do planszy przypisujê jej pierwotny stan; na koñcu ustawiam parametry
+	 * wykonanego ruchu i zwracam obiekt typu Move.
+	 * 
+	 * @param from
+	 * @param to
+	 * @return
+	 * @throws InvalidMoveException
+	 * @throws KingInCheckException
+	 */
 	private Move validateMove(Coordinate from, Coordinate to) throws InvalidMoveException, KingInCheckException {
+
 		Validation.basicValidation(from, to, board);
 		Piece movedPiece = board.getPieceAt(from);
 		Piece pieceAtTo = board.getPieceAt(to);
 		Move executedMove = new Move();
-		PieceOnBoard chosenPiece;
 
-		if (movedPiece.getColor() != calculateNextMoveColor()) {
-			throw new InvalidMoveException();
-		}
-		// FIXME wydzieliæ to lepiej na met. prywatn¹
-		chosenPiece = PieceFactory.returnPiece(movedPiece.getType());
-		if (!chosenPiece.isPathPossible(from, to, board)) {
-			throw new InvalidMoveException();
-		}
+		isMovedColorCorrect(movedPiece);
+
+		determinePath(movedPiece, from, to);
+
 		Board tempBoard = board;
 		board.setPieceAt(movedPiece, to);
 		board.setPieceAt(null, from);
+		//
 		if (isKingInCheck(movedPiece.getColor())) {
-			board = tempBoard;
 			throw new KingInCheckException();
 		}
 		board = tempBoard;
+
 		if (pieceAtTo != null) {
 			executedMove.setType(MoveType.CAPTURE);
 		} else {
@@ -291,7 +302,21 @@ public class BoardManager {
 		return executedMove;
 	}
 
-	private boolean isKingInCheck(Color kingColor) throws NullPointerException{
+	/**
+	 * W metodzie dokonuje siê iteracja po ka¿dym polu planszy; jeœli na polu
+	 * stoi bierka przeciwnika, dodajê jej wspó³rzêdne do mapy (klucz) i na
+	 * podstawie okreœlonego typu przekazujê do mapy (jako wartoœæ) obiekt klasy
+	 * reprezentuj¹cej figurê i implementuj¹cej interfejs PieceOnBoard.
+	 * 
+	 * W drugiej pêtli dla ka¿dej z figur przeciwnika przechowywanej w mapie
+	 * sprawdzam mo¿liwoœæ dojœcia do Króla. Jeœli jest taka mo¿liwoœæ, zwracam
+	 * true.
+	 * 
+	 * @param kingColor
+	 * @return
+	 * @throws NullPointerException
+	 */
+	private boolean isKingInCheck(Color kingColor) throws NullPointerException {
 		int x = 0;
 		int y = 0;
 		boolean result = false;
@@ -321,6 +346,18 @@ public class BoardManager {
 		return result;
 	}
 
+	// FIXME - metoda nie dzia³a poprawnie
+	/**
+	 * Tworzê nextPiece mapê do której zapisujê po³o¿enie (jako klucz) bierek
+	 * gracza w jego kolejce, a jako wartoœc - obiekt klasy reprezentuj¹cej dany
+	 * typ figury. Do listy otherFields przekazujê wspó³rzêdne pól pustych oraz
+	 * pól, na których stoj¹ bierki przeciwnika; nastêpnie dla ka¿dej z moich
+	 * bierek zawartych w mapie nextPiece sprawdzam czy jest mo¿liwe dojœcie do
+	 * jakiegolwiek z pól zawartych w liœcie otherFields
+	 * 
+	 * @param nextMoveColor
+	 * @return
+	 */
 	private boolean isAnyMoveValid(Color nextMoveColor) {
 
 		int x = 0;
@@ -346,10 +383,7 @@ public class BoardManager {
 			}
 			x = 0;
 			y++;
-		} /*
-			 * komenatrzeeeeeeeeee dodaæ
-			 */
-
+		}
 		for (Coordinate from : nextPiece.keySet()) {
 			for (Coordinate to : otherFileds) {
 				if (nextPiece.get(from).isPathPossible(from, to, board) && !isKingInCheck(nextMoveColor)) {
@@ -382,6 +416,38 @@ public class BoardManager {
 		}
 
 		return lastNonAttackMoveIndex;
+	}
+
+	/**
+	 * Metoda sprawdzaj¹ca, czy bierka, któr¹ gracz bêdzie siê poruszaæ, jest
+	 * w³aœciwego koloru.
+	 * 
+	 * @param movedPiece
+	 * @throws InvalidMoveException
+	 */
+	private void isMovedColorCorrect(Piece movedPiece) throws InvalidMoveException {
+		if (movedPiece.getColor() != calculateNextMoveColor()) {
+			throw new InvalidMoveException();
+		}
+	}
+
+	/**
+	 * W metodzie na podstawie danej bierki, z metody w klasie PieceFactory
+	 * wywo³ujê obiekt, który reprezentuje dan¹ figurê - mo¿na wtedy wywo³aæ
+	 * metodê okreœlaj¹c¹ mo¿liwoœæ dojœcia do danego pola.
+	 * 
+	 * @param movedPiece
+	 * @param from
+	 * @param to
+	 * @throws InvalidMoveException
+	 */
+	private void determinePath(Piece movedPiece, Coordinate from, Coordinate to) throws InvalidMoveException {
+		PieceOnBoard chosenPiece;
+		chosenPiece = PieceFactory.returnPiece(movedPiece.getType());
+
+		if (!chosenPiece.isPathPossible(from, to, board)) {
+			throw new InvalidMoveException();
+		}
 	}
 
 }
