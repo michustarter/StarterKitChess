@@ -327,18 +327,25 @@ public class BoardManager {
 		Piece wantedPiece;
 		boolean result = false;
 		PieceOnBoard myPiece;
-		Coordinate verified = new Coordinate(x, y);
-		Map<Coordinate, PieceOnBoard> nextPieces = new HashMap<>();
-		List<Coordinate> otherFileds = new ArrayList<>();
+		Coordinate verified;
+		Color opponentColor;
 
+		if (nextMoveColor == Color.WHITE) {
+			opponentColor = Color.BLACK;
+		} else {
+			opponentColor = Color.WHITE;
+		}
+
+		Map<Coordinate, PieceOnBoard> nextPiece = new HashMap<>();
+		List<Coordinate> otherFileds = new ArrayList<>();
 		while (y < Board.SIZE) {
 			while (x < Board.SIZE) {
 				verified = new Coordinate(x, y);
 				wantedPiece = board.getPieceAt(verified);
 				if (wantedPiece != null && wantedPiece.getColor() == nextMoveColor) {
 					myPiece = PieceFactory.returnPiece(wantedPiece.getType());
-					nextPieces.put(verified, myPiece);
-				} else if (wantedPiece != null && wantedPiece.getColor() != nextMoveColor) {
+					nextPiece.put(verified, myPiece);
+				} else {
 					otherFileds.add(verified);
 				}
 				x++;
@@ -346,9 +353,10 @@ public class BoardManager {
 			x = 0;
 			y++;
 		}
-		for (Coordinate from : nextPieces.keySet()) {
+		for (Coordinate from : nextPiece.keySet()) {
 			for (Coordinate to : otherFileds) {
-				if (nextPieces.get(from).isPathPossible(from, to, board) && !isKingInCheck(nextMoveColor)) {
+				if (nextPiece.get(from).isPathPossible(from, to, board) && !isKingInCheck(opponentColor)
+						&& !isKingInCheck(nextMoveColor)) {
 					result = true;
 					return result;
 				}

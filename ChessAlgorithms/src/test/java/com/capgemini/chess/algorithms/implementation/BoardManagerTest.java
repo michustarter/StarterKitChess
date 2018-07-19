@@ -1,6 +1,10 @@
 package com.capgemini.chess.algorithms.implementation;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +17,7 @@ import com.capgemini.chess.algorithms.data.enums.BoardState;
 import com.capgemini.chess.algorithms.data.enums.MoveType;
 import com.capgemini.chess.algorithms.data.enums.Piece;
 import com.capgemini.chess.algorithms.data.generated.Board;
+import com.capgemini.chess.algorithms.implementation.exceptions.EqualFieldsCoordinatesException;
 import com.capgemini.chess.algorithms.implementation.exceptions.InvalidMoveException;
 import com.capgemini.chess.algorithms.implementation.exceptions.KingInCheckException;
 import com.capgemini.chess.algorithms.implementation.exceptions.NullFromFieldException;
@@ -870,7 +875,7 @@ public class BoardManagerTest {
 		return counter;
 	}
 	@Test
-	public void testPerformMoveIfFieldFromIsNull() {
+	public void testPerformMoveNullFromExceptionIfFieldFromIsNull() {
 		// given
 		Board board = new Board();
 		board.setPieceAt(Piece.BLACK_PAWN, new Coordinate(4, 0));
@@ -889,4 +894,26 @@ public class BoardManagerTest {
 		// then 
 		assertTrue(exceptionThrown);
 	}
+	
+	
+	@Test
+	public void testPerformMoveEqualFieldException() {
+	
+		// given
+		Board board = new Board();
+		board.setPieceAt(Piece.WHITE_ROOK, new Coordinate(4, 0));
+		board.setPieceAt(Piece.BLACK_ROOK, new Coordinate(4, 0));
+		
+		// when
+		BoardManager boardManager = new BoardManager(board);
+		boolean exceptionThrown = false;
+		try {
+			boardManager.performMove(new Coordinate(4, 0), new Coordinate(4, 0));
+		} catch (InvalidMoveException e) {
+			exceptionThrown = e instanceof EqualFieldsCoordinatesException;
+		}
+		
+		// then 
+		assertTrue(exceptionThrown);
+		}
 }

@@ -2,7 +2,7 @@ package com.capgemini.chess.algorithms.implementation;
 
 import com.capgemini.chess.algorithms.data.Coordinate;
 import com.capgemini.chess.algorithms.data.generated.Board;
-import com.capgemini.chess.algorithms.implementation.exceptions.EqualFieldCoordinatesException;
+import com.capgemini.chess.algorithms.implementation.exceptions.EqualFieldsCoordinatesException;
 import com.capgemini.chess.algorithms.implementation.exceptions.FromFieldCoordinatesOutsideBoardException;
 import com.capgemini.chess.algorithms.implementation.exceptions.InvalidMoveException;
 import com.capgemini.chess.algorithms.implementation.exceptions.NullFromFieldException;
@@ -30,7 +30,7 @@ public class Validation {
 			throw new NullFromFieldException();
 		}
 		if (from == to) {
-			throw new EqualFieldCoordinatesException();
+			throw new EqualFieldsCoordinatesException();
 		}
 		if (board.getPieceAt(to) != null && (board.getPieceAt(to).getColor() == board.getPieceAt(from).getColor())) {
 			throw new OpponentColorException();
