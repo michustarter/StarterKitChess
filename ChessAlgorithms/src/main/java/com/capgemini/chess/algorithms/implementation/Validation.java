@@ -10,7 +10,14 @@ import com.capgemini.chess.algorithms.implementation.exceptions.CaptureYourPiece
 import com.capgemini.chess.algorithms.implementation.exceptions.ToFieldCoordinatesOutsideBoardException;
 
 public class Validation {
-
+	/**
+	 * co robi metodaaa opisaæ
+	 * 
+	 * @param from
+	 * @param to
+	 * @param board
+	 * @throws InvalidMoveException
+	 */
 	public static void basicValidation(Coordinate from, Coordinate to, Board board) throws InvalidMoveException {
 
 		int yFrom = from.getY();

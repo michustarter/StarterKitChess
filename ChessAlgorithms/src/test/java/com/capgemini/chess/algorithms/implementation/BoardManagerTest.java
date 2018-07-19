@@ -977,6 +977,7 @@ public class BoardManagerTest {
 		// then
 		assertTrue(exceptionThrown);
 	}
+
 	@Test
 	public void testPerformMovePawnCaptureDestination() {
 		// given
@@ -996,6 +997,7 @@ public class BoardManagerTest {
 		// then
 		assertFalse(exceptionThrown);
 	}
+
 	@Test
 	public void testPerformMoveSingleStepWhitePawnAttackDestination() {
 		// given
@@ -1006,7 +1008,7 @@ public class BoardManagerTest {
 		BoardManager boardManager = new BoardManager(board);
 		boolean exceptionThrown = false;
 		try {
-			boardManager.performMove(new Coordinate(2,1), new Coordinate(2,2));
+			boardManager.performMove(new Coordinate(2, 1), new Coordinate(2, 2));
 		} catch (InvalidMoveException e) {
 			exceptionThrown = true;
 		}
@@ -1014,6 +1016,7 @@ public class BoardManagerTest {
 		// then
 		assertFalse(exceptionThrown);
 	}
+
 	@Test
 	public void testPerformMoveDoubleStepWhitePawnAttackDestination() {
 		// given
@@ -1024,7 +1027,7 @@ public class BoardManagerTest {
 		BoardManager boardManager = new BoardManager(board);
 		boolean exceptionThrown = false;
 		try {
-			boardManager.performMove(new Coordinate(2,1), new Coordinate(2,3));
+			boardManager.performMove(new Coordinate(2, 1), new Coordinate(2, 3));
 		} catch (InvalidMoveException e) {
 			exceptionThrown = true;
 		}
@@ -1032,17 +1035,19 @@ public class BoardManagerTest {
 		// then
 		assertFalse(exceptionThrown);
 	}
+
 	@Test
 	public void testPerformMoveSingleStepBlackPawnAttackDestination() {
 		// given
 		Board board = new Board();
-		board.setPieceAt(Piece.BLACK_PAWN, new Coordinate(1,6));
+		board.getMoveHistory().add(createDummyMove(board));
+		board.setPieceAt(Piece.BLACK_PAWN, new Coordinate(1, 6));
 
 		// when
 		BoardManager boardManager = new BoardManager(board);
 		boolean exceptionThrown = false;
 		try {
-			boardManager.performMove(new Coordinate(1,6), new Coordinate(1,5));
+			boardManager.performMove(new Coordinate(1, 6), new Coordinate(1, 5));
 		} catch (InvalidMoveException e) {
 			exceptionThrown = true;
 		}
@@ -1050,17 +1055,56 @@ public class BoardManagerTest {
 		// then
 		assertFalse(exceptionThrown);
 	}
+
 	@Test
 	public void testPerformMoveDoubleStepBlackPawnAttackDestination() {
 		// given
 		Board board = new Board();
-		board.setPieceAt(Piece.BLACK_PAWN, new Coordinate(1,6));
+		board.getMoveHistory().add(createDummyMove(board));
+		board.setPieceAt(Piece.BLACK_PAWN, new Coordinate(1, 6));
 
 		// when
 		BoardManager boardManager = new BoardManager(board);
 		boolean exceptionThrown = false;
 		try {
-			boardManager.performMove(new Coordinate(1,6), new Coordinate(1,4));
+			boardManager.performMove(new Coordinate(1, 6), new Coordinate(1, 4));
+		} catch (InvalidMoveException e) {
+			exceptionThrown = true;
+		}
+
+		// then
+		assertFalse(exceptionThrown);
+	}
+
+	@Test
+	public void testPerformCaptureInSingleStepWhitePawn() throws InvalidMoveException {
+		// given
+		Board board = new Board();
+		board.setPieceAt(Piece.WHITE_PAWN, new Coordinate(2, 1));
+		board.setPieceAt(Piece.BLACK_KNIGHT, new Coordinate(3, 2));
+
+		// when
+		BoardManager boardManager = new BoardManager(board);
+		Move move = boardManager.performMove(new Coordinate(2, 1), new Coordinate(3, 2));
+
+		// then
+		assertEquals(MoveType.CAPTURE, move.getType());
+		assertEquals(Piece.WHITE_PAWN, move.getMovedPiece());
+	}
+
+	@Test
+	public void testPerformCaptureInSingleStepBlackPawn() throws InvalidMoveException{
+		// given
+		Board board = new Board();
+		board.getMoveHistory().add(createDummyMove(board));
+		board.setPieceAt(Piece.BLACK_PAWN, new Coordinate(1, 6));
+		board.setPieceAt(Piece.WHITE_BISHOP, new Coordinate(2, 5));
+
+		// when
+		BoardManager boardManager = new BoardManager(board);
+		boolean exceptionThrown = false;
+		try {
+			boardManager.performMove(new Coordinate(1, 6), new Coordinate(2, 5));
 		} catch (InvalidMoveException e) {
 			exceptionThrown = true;
 		}

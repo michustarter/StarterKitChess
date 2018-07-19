@@ -15,6 +15,7 @@ import com.capgemini.chess.algorithms.data.enums.Piece;
  * @author Michal Bejm
  *
  */
+
 public class Board {
 
 	public static final int SIZE = 8;

@@ -23,6 +23,7 @@ import com.capgemini.chess.algorithms.implementation.exceptions.KingInCheckExcep
  * @author Michal Bejm
  *
  */
+
 public class BoardManager {
 
 	private Board board = new Board();
@@ -174,7 +175,7 @@ public class BoardManager {
 			}
 			x = 0;
 			y++;
-		}
+		}//FIXME zwrocic nulla
 		return found;
 	}
 	// PRIVATE
@@ -265,7 +266,7 @@ public class BoardManager {
 		if (movedPiece.getColor() != calculateNextMoveColor()) {
 			throw new InvalidMoveException();
 		}
-
+//FIXME wydzieliæ to lepiej na met. prywatn¹
 		chosenPiece = PieceFactory.returnPiece(movedPiece.getType());
 		if (!chosenPiece.isPathPossible(from, to, board)) {
 			throw new InvalidMoveException();
@@ -352,7 +353,10 @@ public class BoardManager {
 			}
 			x = 0;
 			y++;
-		}
+		}/*
+		komenatrzeeeeeeeeee dodaæ
+		*/
+		
 		for (Coordinate from : nextPiece.keySet()) {
 			for (Coordinate to : otherFileds) {
 				if (nextPiece.get(from).isPathPossible(from, to, board) && !isKingInCheck(opponentColor)

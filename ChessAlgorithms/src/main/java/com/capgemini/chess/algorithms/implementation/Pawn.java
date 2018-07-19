@@ -23,14 +23,13 @@ public class Pawn implements PieceOnBoard {
 
 		if (pawnColor == Color.BLACK) {
 			yStart = 6;
-			singleStep = (-1);
-			doubleStep = (-2);
+			singleStep = -1;
+			doubleStep = -2;
 		}
 
 		if (yFrom == yStart && ((yFrom + singleStep) == yTo && fieldAtTo == null)) {
 			isPossibility = true;
 			if ((xFrom - 1 == xTo) || (xFrom + 1 == xTo)) {
-				isPossibility = true;
 				return isPossibility;
 			}
 			return isPossibility;
