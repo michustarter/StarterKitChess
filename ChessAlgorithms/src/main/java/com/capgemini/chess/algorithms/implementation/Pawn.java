@@ -27,7 +27,7 @@ public class Pawn implements PieceOnBoard {
 			doubleStep = -2;
 		}
 
-		if (yFrom == yStart && ((yFrom + singleStep) == yTo && fieldAtTo == null)) {
+		if (yFrom == yStart && ((yFrom + singleStep) == yTo && board.getPieceAt(new Coordinate(xFrom, yTo)) == null)) {
 			isPossibility = true;
 			if ((xFrom - 1 == xTo) || (xFrom + 1 == xTo)) {
 				return isPossibility;
@@ -35,17 +35,18 @@ public class Pawn implements PieceOnBoard {
 			return isPossibility;
 
 		}
-		if (yFrom == yStart && ((yFrom + doubleStep) == yTo && fieldAtTo == null)) {
-			if (board.getPieceAt(new Coordinate(xFrom, yFrom + singleStep)) == null) {
-				isPossibility = true;
-				return isPossibility;
-			}
+		if (yFrom == yStart
+				&& ((yFrom + doubleStep) == yTo && board.getPieceAt(new Coordinate(xFrom, yFrom + singleStep)) == null)
+				&& fieldAtTo == null) {
+			isPossibility = true;
 			return isPossibility;
+
 		}
 		if (yFrom != yStart && (yFrom + singleStep) == yTo && xFrom == xTo && fieldAtTo == null) {
 			isPossibility = true;
 			return isPossibility;
-		} else if (yFrom != yStart && (yFrom + singleStep) == yTo && fieldAtTo != null) {
+		} else if (yFrom != yStart && (yFrom + singleStep) == yTo
+				&& board.getPieceAt(new Coordinate(xFrom, yTo)) == null && fieldAtTo != null) {
 			if ((xFrom - 1 == xTo) || (xFrom + 1 == xTo)) {
 				isPossibility = true;
 				return isPossibility;
